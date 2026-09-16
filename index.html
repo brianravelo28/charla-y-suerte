@@ -1,3 +1,4 @@
+<meta charset="utf-8" />
 <title>Charla y Suerte</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -840,6 +841,29 @@
     font-size: 27px;
     font-weight:700;
     animation: chip-in 0.3s ease both;
+    cursor: pointer;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bank-chip .chip-check{
+    width: 18px; height: 18px;
+    border-radius: 5px;
+    border: 1.5px solid var(--gold-dim);
+    flex: 0 0 auto;
+    position: relative;
+  }
+  .bank-chip.checked{ opacity: 0.55; }
+  .bank-chip.checked .chip-text{ text-decoration: line-through; }
+  .bank-chip.checked .chip-check{ background: var(--gold); border-color: var(--gold); }
+  .bank-chip.checked .chip-check::after{
+    content:"";
+    position:absolute; left:4px; top:2px;
+    width:8px; height:5px;
+    border-left:2px solid var(--felt-950);
+    border-bottom:2px solid var(--felt-950);
+    transform: rotate(-45deg);
   }
   .bank-chip:nth-child(1){ animation-delay: 0.02s; }
   .bank-chip:nth-child(2){ animation-delay: 0.07s; }
@@ -891,12 +915,28 @@
     padding-left: 26px;
     border-left: 1px dashed var(--hairline);
   }
-  .verb-col .bank-chips.vertical{
+  .bank-chips.vertical{
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
   }
-  .verb-col .bank-chips.vertical .bank-chip{ text-align:left; }
+  .bank-chips.vertical .bank-chip{ text-align:left; justify-content:flex-start; }
+
+  .q-ex-list{
+    display:flex;
+    flex-direction:column;
+    gap: 12px;
+  }
+  .q-ex-line{
+    font-size: 17px;
+    font-weight:600;
+    color: var(--cream);
+    line-height:1.4;
+    background: rgba(244,239,224,0.05);
+    border-left: 3px solid var(--gold-dim);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+  }
 
   .question-block .bank-label{ margin-bottom: 11px; }
   .question-group{ margin-bottom: 14px; }
@@ -1360,6 +1400,23 @@
     { type:"Wh- Questions", grid:true, examples:["What do…?","Who are…?","Why do…?","Where is…?","When do…?","How is…?"] }
   ];
 
+  var TOPIC_QUESTIONS = {
+    work: ["What do you think about [s]?","How often do you deal with [s]?","Why is [s] important to you?","How do you handle [s]?","What's your experience with [s] like?","Who do you usually work with on [s]?","What would make [s] easier?"],
+    hobbies: ["What do you think about [s]?","How often do you do [s]?","Why do you enjoy [s]?","When did you get into [s]?","How did you learn [s]?","What do you like most about [s]?","Who do you usually do [s] with?"],
+    travel: ["What do you think about [s]?","How often do you experience [s]?","Why do you like [s]?","What's the best part of [s]?","How do you prepare for [s]?","What surprises you about [s]?","Who do you usually travel with for [s]?"],
+    weekend: ["What do you usually do about [s]?","How often do you plan [s]?","Why do you like [s]?","How do you decide on [s]?","What makes [s] special?","Who do you usually spend [s] with?","When do you have time for [s]?"],
+    likes: ["What do you think about [s]?","Do you like [s]? Why or why not?","How do you feel about [s]?","What's your favorite thing about [s]?","How would you describe [s] to a friend?","Why do people enjoy [s]?","What don't you like about [s]?"],
+    plans: ["What are you going to do about [s]?","When are you going to deal with [s]?","Why are you going to focus on [s]?","How are you going to prepare for [s]?","Who are you going to include in [s]?","What are you most excited about for [s]?","Where are you going to do [s]?"],
+    story: ["What happened with [s]?","When did [s] happen?","How did you feel about [s]?","Who was with you during [s]?","Where did [s] take place?","What did you learn from [s]?","Why do you still remember [s]?"],
+    art: ["What do you think about [s]?","How often do you practice [s]?","Why does [s] matter to you?","How did you get started with [s]?","What inspires you about [s]?","Who introduced you to [s]?","What's challenging about [s]?"],
+    values: ["What does [s] mean to you?","How do you show [s] in daily life?","Why is [s] important to you?","When did you first realize [s] mattered to you?","How does [s] guide your decisions?","Who taught you about [s]?","What happens when [s] is missing?"],
+    formative: ["What happened with [s]?","How did [s] shape who you are?","Why do you remember [s]?","Who was involved in [s]?","When did [s] happen?","What changed after [s]?","How do you talk about [s] now?"],
+    whatif: ["What would you do about [s]?","How would [s] change your life?","Why would you choose [s]?","Who would you tell about [s]?","Where would [s] take you?","What would be the hardest part of [s]?","How would others react to [s]?"],
+    compare: ["How has [s] changed over time?","What was [s] like before?","Why is [s] different now?","What do you miss about [s]?","How do you feel about the change in [s]?","What caused [s] to change?","Who noticed the change in [s]?"],
+    goals: ["What will you do about [s]?","How will [s] change for you?","Why will [s] matter to you?","When will you start working on [s]?","Who will support you with [s]?","What will you need for [s]?","How will you know you've achieved [s]?"],
+    complexstory: ["What happened with [s]?","How did [s] affect you?","Why was [s] significant?","Who else was involved in [s]?","When did [s] take place?","What did you realize because of [s]?","How has [s] stayed with you?"]
+  };
+
   var MECHANICS = [
     { id:"cards", label:"Cards" },
     { id:"dice", label:"Dice" },
@@ -1408,6 +1465,7 @@
   }
   function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
   function chance(p){ return Math.random() < p; }
+  function lowerFirst(s){ return s.charAt(0).toLowerCase() + s.slice(1); }
   function el(tag, cls, html){
     var e = document.createElement(tag);
     if (cls) e.className = cls;
@@ -1766,7 +1824,15 @@
 
     var subtopics = topic.subtopics ? sample(topic.subtopics, 5) : null;
 
-    return { topic: topic, banks: banks, complexity: LEVELS[level].complexity, level: level, subtopics: subtopics };
+    var questionExamples = null;
+    if (level !== "A" && TOPIC_QUESTIONS[topic.id] && subtopics && subtopics.length){
+      var filler = lowerFirst(subtopics[0]);
+      questionExamples = sample(TOPIC_QUESTIONS[topic.id], 3).map(function(tmpl){
+        return tmpl.replace("[s]", filler);
+      });
+    }
+
+    return { topic: topic, banks: banks, complexity: LEVELS[level].complexity, level: level, subtopics: subtopics, questionExamples: questionExamples };
   }
 
   /* ---------------- RENDER: GAME ---------------- */
@@ -2114,12 +2180,16 @@
       card.appendChild(subtopicWrap);
     }
 
-    function buildBankBlock(bank, vertical){
+    function buildChecklistBlock(bank, vertical){
       var block = el("div","bank-block");
       block.appendChild(el("div","bank-label", bank.title));
       var chips = el("div","bank-chips" + (vertical ? " vertical" : ""));
       bank.words.forEach(function(w){
-        var chip = el("span","bank-chip", escapeHtml(w.text));
+        var chip = el("span","bank-chip");
+        chip.innerHTML = '<span class="chip-check"></span><span class="chip-text">'+escapeHtml(w.text)+'</span>';
+        chip.addEventListener("click", function(){
+          chip.classList.toggle("checked");
+        });
         chips.appendChild(chip);
         attachGloss(chip, GLOSSARY_ES[w.text.toLowerCase()]);
       });
@@ -2143,19 +2213,38 @@
       return qBlock;
     }
 
+    function buildTopicQuestionsBlock(){
+      var qBlock = el("div","question-block");
+      qBlock.appendChild(el("div","bank-label","Question Starters"));
+      var list = el("div","q-ex-list");
+      round.questionExamples.forEach(function(ex){
+        list.appendChild(el("div","q-ex-line", escapeHtml(ex)));
+      });
+      qBlock.appendChild(list);
+      return qBlock;
+    }
+
+    var checklistCol = el("div","round-col");
     if (round.level === "A"){
+      checklistCol.appendChild(buildChecklistBlock(round.banks[0], true));
+    } else {
+      round.banks.forEach(function(bank){
+        checklistCol.appendChild(buildChecklistBlock(bank, false));
+      });
+    }
+
+    var startersContent = round.level === "A" ? buildStartersBlock()
+      : (round.questionExamples ? buildTopicQuestionsBlock() : null);
+
+    if (startersContent){
       var cols = el("div","round-columns");
-      var verbCol = el("div","round-col verb-col");
-      verbCol.appendChild(buildBankBlock(round.banks[0], true));
       var startersCol = el("div","round-col starters-col");
-      startersCol.appendChild(buildStartersBlock());
-      cols.appendChild(verbCol);
+      startersCol.appendChild(startersContent);
+      cols.appendChild(checklistCol);
       cols.appendChild(startersCol);
       card.appendChild(cols);
     } else {
-      round.banks.forEach(function(bank){
-        card.appendChild(buildBankBlock(bank, false));
-      });
+      card.appendChild(checklistCol);
     }
 
     var actions = el("div","round-actions");
